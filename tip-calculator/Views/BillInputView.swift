@@ -6,9 +6,16 @@
 //
 
 import UIKit
+import Combine
+import CombineCocoa
 
 class BillInputView: UIView {
     // MARK: - Properties
+    private var cancallables = Set<AnyCancellable>()
+    private let billSubject: PassthroughSubject<Double, Never> = .init()
+    var valuePublisher: AnyPublisher<Double, Never> {
+        return billSubject.eraseToAnyPublisher()
+    }
     
     private let headerView: HeaderView = {
         let view = HeaderView()
@@ -62,12 +69,20 @@ class BillInputView: UIView {
     init() {
         super.init(frame: .zero)
         setAutolayout()
+        observe()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Observe
+    private func observe() {
+        textField.textPublisher.sink { [unowned self] text in
+            billSubject.send(text?.doubleValue ?? 0)
+            print("TF - \(text)")
+        }.store(in: &cancallables)
+    }
     
     // MARK: - Actions
     @objc private func doneButtonTapped() {

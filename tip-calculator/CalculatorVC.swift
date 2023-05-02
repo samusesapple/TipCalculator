@@ -7,8 +7,13 @@
 
 import UIKit
 import SnapKit
+import Combine
 
 class CalculatorVC: UIViewController {
+    
+    // MARK: - Properties
+    private let viewModel = CalculatorViewModel()
+    private var cancellables = Set<AnyCancellable>()
     
     private let logoView = LogoView()
     private let resultView = ResultView()
@@ -23,11 +28,20 @@ class CalculatorVC: UIViewController {
         return sv
     }()
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setAutolayout()
+        bindData()
     }
     
+    // MARK: - Data
+    private func bindData() {
+        let input = CalculatorViewModel.Input(billPublisher: billInputView.valuePublisher, tipPublisher: Just(.tenPercent).eraseToAnyPublisher(), splitPublisher: Just(2).eraseToAnyPublisher())
+        let output = viewModel.transform(input: input)
+    }
+    
+    // MARK: - Helpers
     private func setAutolayout() {
         view.backgroundColor = ThemeColor.background
         view.addSubview(stackView)
@@ -55,8 +69,6 @@ class CalculatorVC: UIViewController {
         splitInputView.snp.makeConstraints { make in
             make.height.equalTo(56)
         }
-        
-        
     }
 
 
