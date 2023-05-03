@@ -37,7 +37,7 @@ class CalculatorVC: UIViewController {
     
     // MARK: - Data
     private func bindData() {
-        let input = CalculatorViewModel.Input(billPublisher: billInputView.valuePublisher, tipPublisher: Just(.tenPercent).eraseToAnyPublisher(), splitPublisher: Just(2).eraseToAnyPublisher())
+        let input = CalculatorViewModel.Input(billPublisher: billInputView.valuePublisher, tipPublisher: tipInputView.valuePublisher, splitPublisher: Just(2).eraseToAnyPublisher())
         let output = viewModel.transform(input: input)
     }
     
