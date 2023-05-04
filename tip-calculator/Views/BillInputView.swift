@@ -11,12 +11,7 @@ import CombineCocoa
 
 class BillInputView: UIView {
     // MARK: - Properties
-    private var cancallables = Set<AnyCancellable>()
-    private let billSubject: PassthroughSubject<Double, Never> = .init()
-    var valuePublisher: AnyPublisher<Double, Never> {
-        return billSubject.eraseToAnyPublisher()
-    }
-    
+
     private let headerView: HeaderView = {
         let view = HeaderView()
         view.configureText(topText: "Enter", bottomText: "your bill")
@@ -65,6 +60,12 @@ class BillInputView: UIView {
         return tf
     }()
     
+    private var cancallables = Set<AnyCancellable>()
+    private let billSubject: PassthroughSubject<Double, Never> = .init()
+    var valuePublisher: AnyPublisher<Double, Never> {
+        return billSubject.eraseToAnyPublisher()
+    }
+    
     // MARK: - Lifecycle
     init() {
         super.init(frame: .zero)
@@ -75,7 +76,7 @@ class BillInputView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Observe
     private func observe() {
         textField.textPublisher.sink { [unowned self] text in

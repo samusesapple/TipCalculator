@@ -66,7 +66,18 @@ class ResultView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    
+    func configure(result: Result) {
+        let text = NSMutableAttributedString(string: result.amountPerPerson.currencyFormatted,
+                                             attributes: [.font: ThemeFont.bold(ofSize: 48)])
+        text.addAttributes([.font: ThemeFont.bold(ofSize: 24)],
+                           range: NSMakeRange(0, 1))
+        amountPerPersonLabel.attributedText = text
+        
+        let totalBillView = horizontalStackView.subviews[0] as! AmountView
+        totalBillView.configure(amount: result.totalBill)
+        let totalTipView = horizontalStackView.subviews.last as! AmountView
+        totalTipView.configure(amount: result.totalTip)
+    }
     // MARK: - Helpers
     private func setAutolayout() {
         addSubview(finalStackView)

@@ -8,12 +8,30 @@
 import UIKit
 import SnapKit
 import Combine
+import CombineCocoa
 
 class CalculatorVC: UIViewController {
     
     // MARK: - Properties
     private let viewModel = CalculatorViewModel()
     private var cancellables = Set<AnyCancellable>()
+    
+    private lazy var viewTapPublisher: AnyPublisher<Void, Never> = {
+        let tapGesture = UITapGestureRecognizer(target: self, action: nil)
+        view.addGestureRecognizer(tapGesture)
+        return tapGesture.tapPublisher.flatMap { _ in
+            Just(())
+        }.eraseToAnyPublisher()
+    }()
+    
+    private lazy var logoViewTapPublisher: AnyPublisher<Void, Never> = {
+        let tapGesture = UITapGestureRecognizer(target: self, action: nil)
+        tapGesture.numberOfTapsRequired = 2  // 2번 연속으로 탭해야 작동
+        logoView.addGestureRecognizer(tapGesture)
+        return tapGesture.tapPublisher.flatMap { _ in
+            Just(())
+        }.eraseToAnyPublisher()
+    }()
     
     private let logoView = LogoView()
     private let resultView = ResultView()
@@ -37,8 +55,27 @@ class CalculatorVC: UIViewController {
     
     // MARK: - Data
     private func bindData() {
-        let input = CalculatorViewModel.Input(billPublisher: billInputView.valuePublisher, tipPublisher: tipInputView.valuePublisher, splitPublisher: Just(2).eraseToAnyPublisher())
+        let input = CalculatorViewModel.Input(billPublisher: billInputView.valuePublisher,
+                                              tipPublisher: tipInputView.valuePublisher,
+                                              splitPublisher: splitInputView.valuePublisher,
+                                              viewTapPublisher: viewTapPublisher,
+                                              logoViewTapPublisher: logoViewTapPublisher)
         let output = viewModel.transform(input: input)
+        
+        // 계산 결과 resultView에 전달
+        output.updateViewPublisher.sink { [unowned self] result in
+            resultView.configure(result: result)
+        }.store(in: &cancellables)
+        
+        // 키보드 밖 터치되면, 키보드 내리기
+        output.resetKeyboardPublisher.sink { [unowned self]_ in
+            view.endEditing(true)
+        }.store(in: &cancellables)
+        
+        // 로고 버튼 누르면 리셋 하기
+        output.resetCalculatorPublisher.sink { _ in
+            print("RESET IT!")
+        }.store(in: &cancellables)
     }
     
     // MARK: - Helpers
@@ -51,7 +88,6 @@ class CalculatorVC: UIViewController {
             make.trailing.equalTo(view.snp.trailingMargin).offset(-16)
             make.bottom.equalTo(view.snp.bottomMargin).offset(-16)
             make.top.equalTo(view.snp.topMargin).offset(16)
-
         }
         
         logoView.snp.makeConstraints { make in

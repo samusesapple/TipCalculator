@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Combine
+import CombineCocoa
 
 class SplitInputView: UIView {
     // MARK: - Properties
@@ -17,12 +19,22 @@ class SplitInputView: UIView {
     
     private lazy var decrementButton: UIButton = {
         // min X -> 왼쪽 다 깎기
-        buildButton(text: "-", corners: [.layerMinXMaxYCorner, .layerMinXMinYCorner])
+        let button = buildButton(text: "-", corners: [.layerMinXMaxYCorner, .layerMinXMinYCorner])
+        button.tapPublisher.flatMap {[unowned self] _ in
+            Just(splitSubject.value == 1 ? 1 : splitSubject.value - 1)
+        }.assign(to: \.value, on: splitSubject)
+            .store(in: &cancellables)
+        return button
     }()
     
     private lazy var incrementButton: UIButton = {
         // max X -> 오른쪽 다 깎기
-        buildButton(text: "+", corners: [.layerMaxXMaxYCorner, .layerMaxXMinYCorner])
+    let button = buildButton(text: "+", corners: [.layerMaxXMaxYCorner, .layerMaxXMinYCorner])
+        button.tapPublisher.flatMap {[unowned self] _ in
+            Just(splitSubject.value + 1)
+        }.assign(to: \.value, on: splitSubject)
+            .store(in: &cancellables)
+    return button
     }()
     
     private lazy var quantityLabel: UILabel = {
@@ -40,14 +52,28 @@ class SplitInputView: UIView {
         return sv
     }()
     
+    private let splitSubject: CurrentValueSubject<Int, Never> = .init(1)
+    var valuePublisher: AnyPublisher<Int, Never> {
+        return splitSubject.removeDuplicates().eraseToAnyPublisher()
+    }
+    private var cancellables = Set<AnyCancellable>()
+    
     // MARK: - Lifecycle
     init() {
         super.init(frame: .zero)
         setAutolayout()
+        observe()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Actions
+    private func observe() {
+        splitSubject.sink { [unowned self] quantity in
+            quantityLabel.text = String(quantity)
+        }.store(in: &cancellables)
     }
     
     // MARK: - Helpers

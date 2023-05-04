@@ -75,7 +75,7 @@ class TipInputView: UIView {
     }()
     
     //
-    private let tipSubject = CurrentValueSubject<Tip, Never>(.none)
+    private let tipSubject: CurrentValueSubject<Tip, Never> = .init(.none)
     var valuePublisher: AnyPublisher<Tip, Never> {
         return tipSubject.eraseToAnyPublisher()
     }
@@ -84,6 +84,7 @@ class TipInputView: UIView {
     init() {
         super.init(frame: .zero)
         setAutolayout()
+        observe()
         print(tipSubject.value)
     }
     
@@ -91,32 +92,28 @@ class TipInputView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
-    // MARK: - Helpers
-    private func setAutolayout() {
-        [headerView, tipButtonVerticalStackView].forEach(addSubview(_:))
-        tipButtonVerticalStackView.snp.makeConstraints { make in
-            make.top.bottom.trailing.equalToSuperview()
-        }
-        
-        headerView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalTo(tipButtonVerticalStackView.snp.leading).offset(-24)
-            make.width.equalTo(68)
-            make.centerY.equalTo(tipButtonHorizontalStackView.snp.centerY)
-        }
-    }
-    
-    private func buildTipButton(tip: Tip) -> UIButton {
-        let button = UIButton(type: .system)
-        button.backgroundColor = ThemeColor.primary
-        button.tintColor = .white
-        button.addCornerRadius(radius: 8.0)
-        let text = NSMutableAttributedString(string: tip.stringValue,
-                                             attributes: [.font: ThemeFont.bold(ofSize: 20)])
-        text.addAttributes([.font: ThemeFont.demiBold(ofSize: 14)], range: NSMakeRange(2, 1))
-        button.setAttributedTitle(text, for: .normal)
-        return button
+    // MARK: - Actions
+    func observe() {
+        tipSubject.sink { [unowned self] tip in
+            self.resetView()
+            switch tip {
+            case .none:
+                break
+            case .tenPercent:
+                tenPercentTipButton.backgroundColor = ThemeColor.secondary
+            case .fifteenPercent:
+                fifteenPercentTipButton.backgroundColor = ThemeColor.secondary
+            case .twentyPercent:
+                twentyPercentTipButton.backgroundColor = ThemeColor.secondary
+            case .custom(let value):
+                customTipButton.backgroundColor = ThemeColor.secondary
+                let text = NSMutableAttributedString(string: "$\(value)",
+                                                     attributes: [.font: ThemeFont.bold(ofSize: 20)])
+                text.addAttributes([.font: ThemeFont.bold(ofSize: 14)],
+                                   range: NSMakeRange(0, 1))
+                customTipButton.setAttributedTitle(text, for: .normal)
+            }
+        }.store(in: &cancellables)
     }
     
     func handleCustomTipButton() {
@@ -142,5 +139,44 @@ class TipInputView: UIView {
         }()
         parentViewController?.present(alertController, animated: true)
     }
+    
+    
+    // MARK: - Helpers
+    private func setAutolayout() {
+        [headerView, tipButtonVerticalStackView].forEach(addSubview(_:))
+        tipButtonVerticalStackView.snp.makeConstraints { make in
+            make.top.bottom.trailing.equalToSuperview()
+        }
+        
+        headerView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.trailing.equalTo(tipButtonVerticalStackView.snp.leading).offset(-24)
+            make.width.equalTo(68)
+            make.centerY.equalTo(tipButtonHorizontalStackView.snp.centerY)
+        }
+    }
+    
+    private func resetView() {
+        [tenPercentTipButton, fifteenPercentTipButton, twentyPercentTipButton, customTipButton].forEach { button in
+            button.backgroundColor = ThemeColor.primary
+        }
+        let text = NSMutableAttributedString(string: "Custom tip",
+                                             attributes: [.font: ThemeFont.bold(ofSize: 20)])
+        customTipButton.setAttributedTitle(text, for: .normal)
+    }
+    
+    private func buildTipButton(tip: Tip) -> UIButton {
+        let button = UIButton(type: .system)
+        button.backgroundColor = ThemeColor.primary
+        button.tintColor = .white
+        button.addCornerRadius(radius: 8.0)
+        let text = NSMutableAttributedString(string: tip.stringValue,
+                                             attributes: [.font: ThemeFont.bold(ofSize: 20)])
+        text.addAttributes([.font: ThemeFont.demiBold(ofSize: 14)], range: NSMakeRange(2, 1))
+        button.setAttributedTitle(text, for: .normal)
+        return button
+    }
+    
+    
     
 }
