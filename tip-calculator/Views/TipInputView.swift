@@ -80,6 +80,7 @@ class TipInputView: UIView {
         return tipSubject.eraseToAnyPublisher()
     }
     private var cancellables = Set<AnyCancellable>()
+    
     // MARK: - Lifecycle
     init() {
         super.init(frame: .zero)
@@ -177,6 +178,8 @@ class TipInputView: UIView {
         return button
     }
     
-    
+    func resetData() {
+        tipSubject.send(.none)
+    }
     
 }

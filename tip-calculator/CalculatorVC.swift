@@ -73,8 +73,24 @@ class CalculatorVC: UIViewController {
         }.store(in: &cancellables)
         
         // 로고 버튼 누르면 리셋 하기
-        output.resetCalculatorPublisher.sink { _ in
-            print("RESET IT!")
+        output.resetCalculatorPublisher.sink { [unowned self] _ in
+            billInputView.resetData()
+            tipInputView.resetData()
+            splitInputView.resetData()
+            
+            // logoView가 커졌다 작아지는 애니메이션 효과 추가
+            UIView.animate(withDuration: 0.1,
+                           delay: 0,
+                           usingSpringWithDamping: 5.0,
+                           initialSpringVelocity: 0.5,
+                           options: .curveEaseOut) {
+                self.logoView.transform = .init(scaleX: 1.5, y: 1.5)
+            } completion: { _ in
+                UIView.animate(withDuration: 0.1) {
+                    self.logoView.transform = .identity
+                }
+            }
+
         }.store(in: &cancellables)
     }
     

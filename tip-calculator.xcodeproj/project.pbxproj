@@ -33,6 +33,8 @@
 		F13ED5922A00CF24009F52F4 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13ED5912A00CF24009F52F4 /* UIView+Extension.swift */; };
 		F13ED5942A00D4CE009F52F4 /* AmountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13ED5932A00D4CE009F52F4 /* AmountView.swift */; };
 		F14C73F32A038571008A2F70 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14C73F22A038571008A2F70 /* Double+Extension.swift */; };
+		F14C73F62A03901E008A2F70 /* click.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F14C73F52A03901E008A2F70 /* click.m4a */; };
+		F14C73F92A03908A008A2F70 /* AudioPlayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14C73F82A03908A008A2F70 /* AudioPlayService.swift */; };
 		F1DAAEAA2A01078F00AF7447 /* CalculatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DAAEA92A01078F00AF7447 /* CalculatorViewModel.swift */; };
 		F1DAAEAC2A01085500AF7447 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DAAEAB2A01085500AF7447 /* Result.swift */; };
 		F1DAAEAE2A01161900AF7447 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DAAEAD2A01161900AF7447 /* String+Extension.swift */; };
@@ -83,6 +85,8 @@
 		F13ED5912A00CF24009F52F4 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		F13ED5932A00D4CE009F52F4 /* AmountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountView.swift; sourceTree = "<group>"; };
 		F14C73F22A038571008A2F70 /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
+		F14C73F52A03901E008A2F70 /* click.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = click.m4a; path = ../../../../../Downloads/click.m4a; sourceTree = "<group>"; };
+		F14C73F82A03908A008A2F70 /* AudioPlayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayService.swift; sourceTree = "<group>"; };
 		F1DAAEA92A01078F00AF7447 /* CalculatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorViewModel.swift; sourceTree = "<group>"; };
 		F1DAAEAB2A01085500AF7447 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		F1DAAEAD2A01161900AF7447 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
@@ -144,15 +148,17 @@
 		F137B7922A00A37800D1F08D /* tip-calculator */ = {
 			isa = PBXGroup;
 			children = (
+				F14C73F72A039071008A2F70 /* Serviece */,
 				F137B7932A00A37800D1F08D /* AppDelegate.swift */,
 				F137B7952A00A37800D1F08D /* SceneDelegate.swift */,
-				F137B7972A00A37800D1F08D /* CalculatorVC.swift */,
 				F1F5F4E92A00EE8A005C2592 /* Model */,
 				F1DAAEA82A01073D00AF7447 /* ViewModel */,
 				F13ED57B2A00B075009F52F4 /* Views */,
-				F13ED5862A00C23E009F52F4 /* Utilities */,
+				F137B7972A00A37800D1F08D /* CalculatorVC.swift */,
 				F13ED58B2A00C384009F52F4 /* Extension */,
 				F13ED58E2A00C84A009F52F4 /* Factory */,
+				F13ED5862A00C23E009F52F4 /* Utilities */,
+				F14C73F42A039002008A2F70 /* Resource */,
 				F137B79C2A00A37900D1F08D /* Assets.xcassets */,
 				F137B79E2A00A37900D1F08D /* LaunchScreen.storyboard */,
 				F137B7A12A00A37900D1F08D /* Info.plist */,
@@ -225,6 +231,22 @@
 				F13ED58F2A00C856009F52F4 /* LabelFactory.swift */,
 			);
 			path = Factory;
+			sourceTree = "<group>";
+		};
+		F14C73F42A039002008A2F70 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				F14C73F52A03901E008A2F70 /* click.m4a */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		F14C73F72A039071008A2F70 /* Serviece */ = {
+			isa = PBXGroup;
+			children = (
+				F14C73F82A03908A008A2F70 /* AudioPlayService.swift */,
+			);
+			path = Serviece;
 			sourceTree = "<group>";
 		};
 		F1DAAEA82A01073D00AF7447 /* ViewModel */ = {
@@ -364,6 +386,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F14C73F62A03901E008A2F70 /* click.m4a in Resources */,
 				F137B7A02A00A37900D1F08D /* LaunchScreen.storyboard in Resources */,
 				F137B79D2A00A37900D1F08D /* Assets.xcassets in Resources */,
 			);
@@ -410,6 +433,7 @@
 				F1F5F4EB2A00EE95005C2592 /* Tip.swift in Sources */,
 				F13ED5852A00B226009F52F4 /* SplitInputView.swift in Sources */,
 				F13ED5832A00B212009F52F4 /* TipInputView.swift in Sources */,
+				F14C73F92A03908A008A2F70 /* AudioPlayService.swift in Sources */,
 				F1F5F4ED2A00EEBF005C2592 /* HeaderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -586,6 +610,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -616,6 +641,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

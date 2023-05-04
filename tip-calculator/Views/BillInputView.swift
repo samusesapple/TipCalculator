@@ -91,6 +91,7 @@ class BillInputView: UIView {
     }
     
     // MARK: - Helpers
+    
     private func setAutolayout() {
         [headerView, textFieldContainerView].forEach(addSubview(_:))
         headerView.snp.makeConstraints { make in
@@ -115,6 +116,11 @@ class BillInputView: UIView {
             make.leading.equalTo(currencyDenominationLabel.snp.trailing).offset(16)
             make.trailing.equalTo(textFieldContainerView.snp.trailing).offset(-16)
         }
+    }
+    
+    func resetData() {
+        textField.text = nil
+        billSubject.send(0)
     }
     
 }

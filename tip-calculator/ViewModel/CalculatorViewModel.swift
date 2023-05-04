@@ -24,13 +24,15 @@ class CalculatorViewModel {
         let resetKeyboardPublisher: AnyPublisher<Void, Never>
     }
     
-    var cancellables = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
+    private let audioPlayerService: AudioPlayerService
     
-    
+    init(audioPlayerService: AudioPlayerService = DefaultAudioPlayer()) {
+        self.audioPlayerService = audioPlayerService
+    }
     // MARK: - Methods
     
     func transform(input: Input) -> Output {
-        
         let updateViewPublisher = Publishers.CombineLatest3(
             input.billPublisher,
             input.tipPublisher,
@@ -44,7 +46,14 @@ class CalculatorViewModel {
                 return Just(result)
             }.eraseToAnyPublisher()
         
-        let resetCalculatorPublisher = input.logoViewTapPublisher
+        let resetCalculatorPublisher = input
+            .logoViewTapPublisher
+            .handleEvents(receiveOutput: { [unowned self] _ in
+                audioPlayerService.playSound()
+            }).flatMap {
+            return Just($0)
+        }.eraseToAnyPublisher()
+        
         let resetKeyboardPublisher = input.viewTapPublisher
         return Output(updateViewPublisher: updateViewPublisher,
                       resetCalculatorPublisher: resetCalculatorPublisher,
